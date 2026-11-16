@@ -53,7 +53,7 @@ flowchart LR
 - **External integration:** Steam Web API and other private game-server operations.
 - **Failure handling:** the server-monitoring client retries failed requests and can retain a last-known successful snapshot.
 
-Read the [architecture notes](docs/ARCHITECTURE.md), [feature overview](docs/FEATURES.md) and [case study](docs/CASE_STUDY.md).
+Read the [architecture notes](docs/ARCHITECTURE.md), [feature overview](docs/FEATURES.md), [case study](docs/CASE_STUDY.md) and [source-based technical review](docs/TECHNICAL_REVIEW.md).
 
 ## Verified technical evidence
 
@@ -94,6 +94,7 @@ Screenshots are available for review separately. Images containing member identi
 - [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture and data flows
 - [`docs/FEATURES.md`](docs/FEATURES.md) — feature overview
 - [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md) — problem, approach and engineering outcomes
+- [`docs/TECHNICAL_REVIEW.md`](docs/TECHNICAL_REVIEW.md) — verified snapshot observations and proposed refactor plan
 - [`docs/PRIVATE_SOURCE.md`](docs/PRIVATE_SOURCE.md) — what's intentionally excluded
 - [`examples/`](examples/) — **illustrative excerpts, not a deployable application**
 - [`SECURITY.md`](SECURITY.md) — security and disclosure policy
