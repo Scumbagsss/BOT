@@ -71,4 +71,4 @@ Real identifiers, payment information, passwords, API keys, configuration, serve
 
 ## What's next
 
-A separate **runnable synthetic demo**—with fabricated data, testable workflow rules, SQLite, automated tests and CI—would let reviewers assess implementation quality without exposing proprietary code.
+Three **separate runnable synthetic demos** are available for independent technical review: [ticket backend](https://github.com/Scumbagsss/advanced-discord-ticket-bot), [server-monitoring pipeline](https://github.com/Scumbagsss/dayz-server-monitor-bot), and [FastAPI entitlement workflow](https://github.com/Scumbagsss/priority-access-bot). They use fabricated data and do not ship production DeadCity code.
