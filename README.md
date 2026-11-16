@@ -10,6 +10,10 @@
 
 > **Commercial system · technical case study.** This repository documents selected functionality and implementation decisions. It is **not** a runnable copy of the production application. User data, credentials, server configuration, private detection logic and the full source are excluded.
 
+![DeadCity conceptual operations map](assets/operations-map.svg)
+
+*Conceptual illustration with fictional labels. Not a production screenshot or disclosure of the private system.*
+
 ## The problem
 
 Running a roleplay server involves dozens of repetitive workflows: answering player requests, routing staff reviews, investigating unusual administrative activity and monitoring server availability. Without structured processes, decisions become hard to trace and context gets lost between channels.
