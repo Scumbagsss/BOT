@@ -1,134 +1,103 @@
-# DeadCity Bot — Portfolio Showcase
+# DeadCity Automation Platform
 
-> A private production Discord automation system for a DayZ / STALKER RP community, presented here as a **non-runnable portfolio showcase**.
+**Python-powered Discord operations for a DayZ / STALKER roleplay community.**
 
-![Python](https://img.shields.io/badge/Python-3.12%2B-3776AB?logo=python&logoColor=white)
+![Python](https://img.shields.io/badge/Python-Backend-3776AB?logo=python&logoColor=white)
 ![discord.py](https://img.shields.io/badge/discord.py-2.x-5865F2?logo=discord&logoColor=white)
-![AsyncIO](https://img.shields.io/badge/AsyncIO-async%20architecture-2C3E50)
-![SQLite](https://img.shields.io/badge/SQLite-data%20layer-003B57?logo=sqlite&logoColor=white)
-![Status](https://img.shields.io/badge/source-private-orange)
-![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red)
+![AsyncIO](https://img.shields.io/badge/AsyncIO-Event--driven-334155)
+![SQLite](https://img.shields.io/badge/SQLite-Persistence-003B57?logo=sqlite&logoColor=white)
+![Source](https://img.shields.io/badge/Production_source-private-orange)
 
-**DeadCity Bot** is a multi-module Discord application built to automate community operations, monitoring, moderation workflows and game-server integrations.
+> **Commercial system · technical case study.** This repository documents selected functionality and implementation decisions. It is **not** a runnable copy of the production application. User data, credentials, server configuration, private detection logic and the full source are excluded.
 
-This repository intentionally contains **documentation and selected code excerpts only**. The production source, runtime configuration and proprietary modules remain private.
+## The problem
 
-## Highlights
+Running a roleplay server involves dozens of repetitive workflows: answering player requests, routing staff reviews, investigating unusual administrative activity and monitoring server availability. Without structured processes, decisions become hard to trace and context gets lost between channels.
 
-- **Game server monitoring** — status, player count, queue, history and activity data.
-- **Ticket workflows** — configurable categories, staff controls, archive flow and HTML transcripts.
-- **Discord audit logging** — member, message, voice, role and nickname events.
-- **Role & nickname automation** — role-based prefixes and moderated nickname requests.
-- **Temporary voice channels** — automatic creation, ownership and cleanup.
-- **Faction reservation workflows** — interactive community-management flows.
-- **Priority access & feedback systems** — configurable member workflows.
-- **Spawn / abuse monitoring** — private detection modules and staff alerts.
-- **Duplicate-event analysis** — parser, confidence scoring, persistent cases and automated tests.
+DeadCity brings several of these workflows into one Discord-based operational interface, backed by Python services and persistent state.
 
-## Tech stack
+## What the system covers
 
-`Python` · `discord.py` · `asyncio` · `SQLite / aiosqlite` · `REST APIs` · `Steam Web API` · `matplotlib` · `JSON/JSONC`
+| Domain | User-facing workflow | Backend concern |
+| :--- | :--- | :--- |
+| **Support tickets** | Category-specific forms, staff assignment, ticket status, HTML transcripts | State transitions, permission checks, archival |
+| **Moderation & audit** | Forbidden-item and unusual activity alerts with source references | Log parsing, configurable rules, thresholds and deduplication |
+| **Staff applications** | Nickname changes, RP questionnaires and review actions | Authorization, reviewer actions and persisted decisions |
+| **Server monitoring** | Availability and player/queue reporting | External HTTP calls, retries, snapshot storage and fallback |
+| **Access administration** | Priority/access review and related staff workflows | Validation, entitlement lifecycle and external integrations |
+| **Community operations** | Temporary voice channels, channel audit and additional member workflows | Discord event handlers, scheduled tasks, configuration |
 
-## Architecture
+**Scope note:** Some additional modules exist in the reviewed source snapshot but are not registered in its visible startup entry point. This page does not claim that every module was active in the same deployment.
+
+## Engineering architecture
 
 ```mermaid
 flowchart LR
-    D[Discord] --> C[Discord Cogs / Interaction Layer]
-    G[Game Server / External APIs] --> S[Service Layer]
-    C --> S
-    C --> DB[(Persistence Layer)]
-    S --> DB
-    S --> A[Monitoring & Analysis]
-    A --> C
-    C --> L[Logs / Staff Workflows]
+    U[Players & staff] --> I[Discord commands / forms / events]
+    I --> C[Domain-specific Cogs]
+    C --> S[Services & workflow rules]
+    S --> P[(SQLite / persistent state)]
+    S --> E[External APIs & server data]
+    E --> S
+    S --> A[Notifications & audit records]
+    A --> I
 ```
 
-The production application is split into independent domains instead of one large bot file. Discord-facing cogs call service/domain components, while persistence and configuration are isolated behind their own layers.
+- **Async interaction layer:** `discord.py` commands, views, buttons and background work.
+- **Domain services:** parsing, analysis and storage separated particularly clearly in the player-activity investigation subsystem.
+- **Persistence:** SQLite / `aiosqlite` for state and history; selected modules also integrate with MySQL.
+- **External integration:** Steam Web API and other private game-server operations.
+- **Failure handling:** the server-monitoring client retries failed requests and can retain a last-known successful snapshot.
 
-More detail: [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md)
+Read the [architecture notes](docs/ARCHITECTURE.md), [feature overview](docs/FEATURES.md) and [case study](docs/CASE_STUDY.md).
 
-## Repository contents
+## Verified technical evidence
 
-```text
-deadcity-discord-bot-showcase/
-├── README.md
-├── LICENSE
-├── SECURITY.md
-├── docs/
-│   ├── ARCHITECTURE.md
-│   ├── FEATURES.md
-│   └── PRIVATE_SOURCE.md
-├── examples/
-│   ├── cog_pattern.py
-│   ├── snapshot_model.py
-│   └── storage_pattern.py
-    └── README.md
-```
+A private source snapshot supplied for review on **16 November 2026** contained:
 
-There is deliberately **no executable entry point**, production configuration, token loader, API credential handling, complete database schema or full feature implementation in this repository.
+| Metric | Reviewed snapshot |
+| :--- | ---: |
+| Python source files | 48 |
+| Approximate Python lines (including tests) | 27,654 |
+| Tests in the activity-investigation subsystem | 27 |
+| Local result for that subsystem | **27 passed** |
 
-## Selected code excerpts
+These numbers describe a **reviewed archive, not the complete live deployment**. The 27 tests cover one subsystem; they do not imply that the entire application has equivalent automated test coverage.
 
-The `examples/` directory contains small, isolated excerpts that demonstrate coding style and architectural patterns without publishing enough source to deploy or reconstruct the production bot.
+## Demonstrated workflows
 
-### Async Discord component
+Available project captures illustrate real Discord interactions for:
+- support categories, ticket ownership, staff controls and transcript exports;
+- alerts for restricted-item spawning and unusual activity bursts;
+- channel creation/deletion audit events;
+- nickname-change requests and approval decisions;
+- payment verification and other community requests.
 
-```python
-class StatusCog(commands.Cog):
-    def __init__(self, bot, status_service):
-        self.bot = bot
-        self.status_service = status_service
+Screenshots are available for review separately. Images containing member identifiers, payment details or private staff context should **not** be published without authorization and thorough redaction.
 
-    @app_commands.command(name="server_status")
-    async def server_status(self, interaction: discord.Interaction) -> None:
-        snapshot = await self.status_service.get_public_snapshot()
-        await interaction.response.send_message(
-            embed=build_status_embed(snapshot),
-            ephemeral=True,
-        )
-```
+## Technical decisions and trade-offs
 
-The production implementation contains additional permissions, caching, error handling, configuration and domain logic that are not included here.
+**Why Discord as the UI?** Staff already work there, and interactive components make routine requests accessible without building a second control panel.
 
-## Why the source is private
+**Why persistent workflow state?** Staff reviews span multiple interactions; a message alone should not be the source of truth for assignment, status or closure.
 
-DeadCity Bot was built as a real community system rather than an open-source template. Publishing the complete repository would make it possible to clone and redeploy the application and would expose proprietary moderation/detection logic.
+**Why a private-source case study?** The system contains proprietary moderation rules, customer-specific integrations and user data. This repository intentionally demonstrates the engineering context without redistributing the production system.
 
-For that reason:
+**What I would improve next:** reduce oversized modules, make optional module registration explicit, expand tests beyond log analysis, standardize dependency locking and add more structured error reporting.
 
-- production source code is stored privately;
-- credentials and real Discord IDs are never included here;
-- detector implementations and business rules are not published;
-- database schemas shown publicly are reduced examples;
-- screenshots/documentation can demonstrate the product without distributing it.
+## Repository map
 
-See [`docs/PRIVATE_SOURCE.md`](docs/PRIVATE_SOURCE.md).
+- [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md) — architecture and data flows
+- [`docs/FEATURES.md`](docs/FEATURES.md) — feature overview
+- [`docs/CASE_STUDY.md`](docs/CASE_STUDY.md) — problem, approach and engineering outcomes
+- [`docs/PRIVATE_SOURCE.md`](docs/PRIVATE_SOURCE.md) — what's intentionally excluded
+- [`examples/`](examples/) — **illustrative excerpts, not a deployable application**
+- [`SECURITY.md`](SECURITY.md) — security and disclosure policy
 
-## Screenshots / demo
+## Contact
 
-Add screenshots of the bot **from Discord** to `screenshots/` after hiding personal data, Discord IDs, webhook URLs, tokens, internal staff channels and anything else that should stay private.
+**Scumbagsss** — Python Backend · Automation · Discord Integrations
 
-Good screenshots to add:
+For engineering discussions and commercial inquiries, see [my GitHub profile](https://github.com/Scumbagsss).
 
-1. Server-status embed
-2. Ticket panel / ticket workflow
-3. Moderation or audit log embed
-4. Faction/priority workflow
-5. A graph or monitoring report
-
-## Security
-
-No production secrets belong in this repository. If a credential was ever exposed anywhere outside your private environment, rotate it before continuing to use it.
-
-See [`SECURITY.md`](SECURITY.md).
-
-## Source-use notice
-
-This is a portfolio/evaluation repository, **not an open-source distribution**. No permission is granted to copy, redistribute, rebrand, resell or commercially reuse the code excerpts or project materials except where required by applicable law.
-
-See [`LICENSE`](LICENSE).
-
-## Author
-
-**Scumbagsss**  
-Python Developer · Discord Bot Developer · Automation
+*Project material should only be published with the relevant owner's authorization. No unpublished credentials, configuration, databases or player records are included here.*
