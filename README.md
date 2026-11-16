@@ -98,6 +98,6 @@ Screenshots are available for review separately. Images containing member identi
 
 **Scumbagsss** — Python Backend · Automation · Discord Integrations
 
-For engineering discussions and commercial inquiries, see [my GitHub profile](https://github.com/Scumbagsss).
+**Contact:** Discord — `scumbagsss` · Telegram — [@dilarion](https://t.me/dilarion).
 
 *Project material should only be published with the relevant owner's authorization. No unpublished credentials, configuration, databases or player records are included here.*
